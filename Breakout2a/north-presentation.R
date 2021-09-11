@@ -130,7 +130,7 @@ plot(test_outer_sim$avg_arrival_volume, type='l')
 
 # 6.0 Bring Together, with parameters
 
-sim_function <- function(num_sims = 2, num_ports = 2,
+sim_function <- function(num_sims = 5, num_ports = 2,
                          start_date = as.Date("2020-12-01"),
                          end_date   = as.Date("2021-03-01"),
                          vol_mean = 1000, vol_var = 1,
@@ -181,6 +181,11 @@ test_sim <- sim_function() %>%
   summarise(avg_arrival_volume = mean(arrival_volume))
 
 plot(test_sim$avg_arrival_volume, type='l')
+
+hold_me <- test_sim[test_sim$the_arrival_date == "2021-01-09" | test_sim$the_arrival_date == "2021-01-10",] %>%
+  arrange(the_arrival_date)
+
+boxplot(test_sim$arrival_volume)
 
 # 7.0 Add Complexity ----
 

@@ -85,15 +85,14 @@ sim_function <- function(num_sims = 10, num_ports = 1,
   
   print("the sim has run...")
   
+  multi_instance_function <- multi_instance_function[multi_instance_function$dwhse_arrival_date > as.Date("2021-01-01"),]
+  
   return(multi_instance_function)
 
 }
 
-delay_range <- seq.Date(from=as.Date("2021-01-01"),
-                        to=as.Date("2021-01-15"), by="day")
-
-delay_range_2 <- seq.Date(from=as.Date("2021-01-16"),
-                          to=as.Date("2021-03-31"), by="day")
+delay_range <- seq.Date(from=as.Date("2021-02-01"),
+                        to=as.Date("2021-02-14"), by="day")
 
 # Define UI ----
 ui <- fluidPage(
@@ -130,10 +129,6 @@ ui <- fluidPage(
                    p("Days of Delays"), 
                    value = 0),
       
-      # numericInput("delay_mag_2_base", 
-      #              p("Days of Delays 2"), 
-      #              value = 0),
-      
       numericInput("transit_var_base", 
                    p("Transit Variance"), 
                    value = 0.01),
@@ -155,11 +150,7 @@ ui <- fluidPage(
       numericInput("delay_mag_comp", 
                    p("Days of Delay"), 
                    value = 0),
-      # 
-      # numericInput("delay_mag_2_comp", 
-      #              p("Days of Delay 2"), 
-      #              value = 0),
-      
+
       numericInput("transit_var_comp", 
                    p("Transit Variance"), 
                    value = 0.01),
@@ -178,7 +169,7 @@ ui <- fluidPage(
       # Output: Tabset w/ plot, summary, and table ----
       tabsetPanel(type = "tabs",
                   tabPanel("Single Instance",
-                           verbatimTextOutput('prob_base_1250', placeholder = TRUE),
+                           # verbatimTextOutput('prob_base_1250', placeholder = TRUE),
                            plotOutput("single_sim_box")),
                   tabPanel("Scenario Comparison", plotOutput("scenario_plan_line")))
     )
@@ -244,7 +235,9 @@ server <- function(input, output) {
     d <- sim_data_base()
     
     ggplot(d, aes(x=as.Date(dwhse_arrival_date), y=dwhse_volume, group=dwhse_arrival_date)) +
-      geom_boxplot()
+      geom_boxplot() +
+      theme_minimal() +
+      labs(x="Warehouse Arrival Date", y="Unit Arrival Volume")
     
   })
   
@@ -254,7 +247,10 @@ server <- function(input, output) {
     d <- sim_plan_comp()
     
     ggplot(d, aes(x=dwhse_arrival_date, y=arrival_volume, group=sim, color=sim)) +
-      geom_line()
+      geom_line() +
+      scale_color_manual(values=c("dodgerblue", "deeppink")) +
+      theme_minimal() +
+      labs(x="Warehouse Arrival Date", y="Unit Arrival Volume")
     
   })
   
