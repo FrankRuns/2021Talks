@@ -8,7 +8,7 @@ Deck used for context to the problem and project. Original deck lives on Google 
 
 # Shiny App
 
-For help demoing the concept and usefulness of monte carlo sim in scenario planning. 
+For help demoing the concept and usefulness of monte carlo sim in scenario planning. https://lazo-labs.shinyapps.io/port-delay-sim-app/
 
 # Rmarkdown Tutorial
 
