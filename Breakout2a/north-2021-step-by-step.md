@@ -7,15 +7,7 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-# set options
-knitr::opts_chunk$set(echo = TRUE)
-# load libraries
-library(tidyverse) # for manipulating data
-library(ggplot2) # for visualization
-library(fGarch) # for creating skewed distributions
-library(kableExtra) # for creating HTML tables
-```
+
 
 This markdown doc <em>slowly</em> walks through an example of building a monte carlo simulation to understand the impact of port delays in a global supply chain. The commentary is heavy, but <mark>the main-est points are highlighted in yellow</mark>. The pre-read to this markdown is a Google Slides doc found here. 
 
@@ -23,23 +15,34 @@ This markdown doc <em>slowly</em> walks through an example of building a monte c
 
 Of course, <mark>distributions are the building blocks of monte carlo sim</mark>. As such, we need to know how to create them and sample them. R gives us some fantastic abilities to create different kinds of distributions. We can create normal distributions, of course... but we can also easily create longer tail, skewed distributions (and all sort of distributions outlined in this blog post). First things first; lets sample 1 observation from a normal distribution with a mean of 14 and standard deviation of 2.
 
-```{r creating-distributions-norm-sinlge}
+
+```r
 rnorm(1, 14, 2) # single value, normal
+```
+
+```
+## [1] 13.29127
 ```
 
 Now, lets sample ten thousand observations and plot it to ensure it does, indeed, give us a normal distribution of values around the mean value of 14.
 
-```{r creating-distributions-norm-many}
+
+```r
 n_df <- data.frame(values = rnorm(10000, 14, 2)) # many values, normal
 hist(n_df$values, xlab = "Value", ylab = "Count", main = "Normal Distribution")
 ```
 
+![](north-2021-step-by-step_files/figure-html/creating-distributions-norm-many-1.png)<!-- -->
+
 Yup. Good stuff. Now, we need non-normal distributions. In particular, <mark>I want right tailed distributions. In supply chain, it makes sense that things can be late (and sometimes very late), but they are rarely very early.</mark> For this we leverage the fGarch package. The syntax is nearly the same as the normal distribution function above... but we have an additional parameter, xi, that let's us define how long the tail is. 
 
-```{r creating-distributions-tail-many}
+
+```r
 r_df <- data.frame(values = rsnorm(10000, mean = 14, sd = 2, xi = 2.5)) # many values, tail
 hist(r_df$values, xlab = "Value", ylab = "Count", main = "Skewed Distribution")
 ```
+
+![](north-2021-step-by-step_files/figure-html/creating-distributions-tail-many-1.png)<!-- -->
 
 <mark>When you are doing this in "real life", if possible, you will want to examine actual data from your business to determine what the distribution looks like.</mark> Great! Now lets string some of this distributions together to create our simulation.
 
@@ -47,7 +50,8 @@ hist(r_df$values, xlab = "Value", ylab = "Count", main = "Skewed Distribution")
 
 <mark>I believe it is healthy, when possible, to start with a single instance and build out from there. Additionally, I like to do it manually because it forces me to think through the process and verify the code is doing what I think it's doing.</mark>
 
-```{r single-instance-manual-setup}
+
+```r
 # * create date range ----
 date_range <- rep(seq.Date(from=as.Date("2020-12-01"),
                            to=as.Date("2021-03-01"), by="day"), 1) # single port
@@ -75,12 +79,82 @@ single_instance_manual <- data.frame(date_range, order_volume, order_oport,
 head(single_instance_manual) %>%
   kbl(caption = "Single Instance Manual Dataframe") %>%
   kable_classic(full_width = F, html_font = "Cambria", position = "left")
-
 ```
+
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; ">
+<caption>Single Instance Manual Dataframe</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> date_range </th>
+   <th style="text-align:right;"> order_volume </th>
+   <th style="text-align:right;"> order_oport </th>
+   <th style="text-align:right;"> oport_dport </th>
+   <th style="text-align:right;"> dport_dwhse </th>
+   <th style="text-align:right;"> the_full_transit </th>
+   <th style="text-align:left;"> dwhse_arrival_date </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2020-12-01 </td>
+   <td style="text-align:right;"> 999 </td>
+   <td style="text-align:right;"> 12.68027 </td>
+   <td style="text-align:right;"> 12.82438 </td>
+   <td style="text-align:right;"> 3.535596 </td>
+   <td style="text-align:right;"> 29 </td>
+   <td style="text-align:left;"> 2020-12-30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-02 </td>
+   <td style="text-align:right;"> 1002 </td>
+   <td style="text-align:right;"> 11.40327 </td>
+   <td style="text-align:right;"> 21.60117 </td>
+   <td style="text-align:right;"> 5.162405 </td>
+   <td style="text-align:right;"> 38 </td>
+   <td style="text-align:left;"> 2021-01-09 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-03 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 13.33251 </td>
+   <td style="text-align:right;"> 13.57889 </td>
+   <td style="text-align:right;"> 2.046263 </td>
+   <td style="text-align:right;"> 29 </td>
+   <td style="text-align:left;"> 2021-01-01 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-04 </td>
+   <td style="text-align:right;"> 1001 </td>
+   <td style="text-align:right;"> 14.65524 </td>
+   <td style="text-align:right;"> 13.41956 </td>
+   <td style="text-align:right;"> 3.676399 </td>
+   <td style="text-align:right;"> 32 </td>
+   <td style="text-align:left;"> 2021-01-05 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-05 </td>
+   <td style="text-align:right;"> 998 </td>
+   <td style="text-align:right;"> 12.04889 </td>
+   <td style="text-align:right;"> 18.25772 </td>
+   <td style="text-align:right;"> 2.725905 </td>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:left;"> 2021-01-07 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-06 </td>
+   <td style="text-align:right;"> 1001 </td>
+   <td style="text-align:right;"> 11.88893 </td>
+   <td style="text-align:right;"> 11.79702 </td>
+   <td style="text-align:right;"> 5.151790 </td>
+   <td style="text-align:right;"> 29 </td>
+   <td style="text-align:left;"> 2021-01-04 </td>
+  </tr>
+</tbody>
+</table>
 Now, we can aggregate the volume by arrival date to see what the warehouse should plan to receive on each day in this instance.
 
-```{r single-instance-manual-plot}
 
+```r
 # NOTE: complete function from tidyr
 sim <- single_instance_manual %>% group_by(dwhse_arrival_date) %>%
   summarise(dwhse_arrival_volume = sum(order_volume)) %>%
@@ -89,15 +163,16 @@ sim <- single_instance_manual %>% group_by(dwhse_arrival_date) %>%
 
 plot(sim$dwhse_arrival_date, sim$dwhse_arrival_volume, type='l',
      xlab = "Warehouse Arrival Date", ylab = "Warehouse Arrival Volume", main = "Single Instance Manual Arrival Volume")
-
 ```
+
+![](north-2021-step-by-step_files/figure-html/single-instance-manual-plot-1.png)<!-- -->
 
 If you are responsible for warehouse planning, would you plan to receive 1,000 units per day? 2,000 units? Let's says you plan on 1,800. The next question is: <mark>how sure are you of these projections? The answer is not sure! This is only a single instance. We want to do this many more times to answer that second question.</mark>  
 
 Before moving forward... the pipeline used to create the aggregate dataframe for that plot above - I'm going to use that a lot so it is useful to wrap it into a function itself. It will make the code more readable as we proceed. 
 
-```{r create-aggregate-function}
 
+```r
 agg_by_arrival_function <- function(the_dataframe) {
   
   hold_me <- the_dataframe %>%
@@ -113,14 +188,50 @@ agg_by_arrival_function <- function(the_dataframe) {
 head(agg_by_arrival_function(single_instance_manual), 6) %>%
   kbl(caption = "Arrival Function Test Output") %>%
   kable_classic(full_width = F, html_font = "Cambria", position = "left")
-
 ```
+
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; ">
+<caption>Arrival Function Test Output</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> dwhse_arrival_date </th>
+   <th style="text-align:right;"> dwhse_arrival_volume </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:right;"> 999 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-01-01 </td>
+   <td style="text-align:right;"> 1000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-01-02 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-01-03 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-01-04 </td>
+   <td style="text-align:right;"> 1001 </td>
+  </tr>
+</tbody>
+</table>
 
 ## Wrap Single Instance in a Function
 
 Everything we just did manually - lets wrap it in a function so we can run it repeatedly.
 
-```{r single-instance-function-setup}
+
+```r
 # * create function ----
 inner_sim <- function() {
   
@@ -148,18 +259,89 @@ single_instance_function <- inner_sim()
 head(single_instance_function) %>%
   kbl(caption = "Single Instance Function Test Output") %>%
   kable_classic(full_width = F, html_font = "Cambria", position = "left")
-
 ```
+
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; ">
+<caption>Single Instance Function Test Output</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> date_range </th>
+   <th style="text-align:right;"> order_volume </th>
+   <th style="text-align:right;"> order_oport </th>
+   <th style="text-align:right;"> oport_dport </th>
+   <th style="text-align:right;"> dport_dwhse </th>
+   <th style="text-align:right;"> the_full_transit </th>
+   <th style="text-align:left;"> dwhse_arrival_date </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2020-12-01 </td>
+   <td style="text-align:right;"> 1001 </td>
+   <td style="text-align:right;"> 14.82279 </td>
+   <td style="text-align:right;"> 15.54591 </td>
+   <td style="text-align:right;"> 3.803584 </td>
+   <td style="text-align:right;"> 34 </td>
+   <td style="text-align:left;"> 2021-01-04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-02 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 18.90902 </td>
+   <td style="text-align:right;"> 13.53086 </td>
+   <td style="text-align:right;"> 3.201615 </td>
+   <td style="text-align:right;"> 36 </td>
+   <td style="text-align:left;"> 2021-01-07 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-03 </td>
+   <td style="text-align:right;"> 999 </td>
+   <td style="text-align:right;"> 11.81023 </td>
+   <td style="text-align:right;"> 11.77812 </td>
+   <td style="text-align:right;"> 4.088256 </td>
+   <td style="text-align:right;"> 28 </td>
+   <td style="text-align:left;"> 2020-12-31 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-04 </td>
+   <td style="text-align:right;"> 998 </td>
+   <td style="text-align:right;"> 12.88880 </td>
+   <td style="text-align:right;"> 14.03698 </td>
+   <td style="text-align:right;"> 3.047648 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:left;"> 2021-01-03 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-05 </td>
+   <td style="text-align:right;"> 1001 </td>
+   <td style="text-align:right;"> 13.35430 </td>
+   <td style="text-align:right;"> 13.80223 </td>
+   <td style="text-align:right;"> 3.238579 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:left;"> 2021-01-04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-06 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 15.71353 </td>
+   <td style="text-align:right;"> 17.63602 </td>
+   <td style="text-align:right;"> 2.895235 </td>
+   <td style="text-align:right;"> 36 </td>
+   <td style="text-align:left;"> 2021-01-11 </td>
+  </tr>
+</tbody>
+</table>
 
 Just like above, we can visualize it to make sure it's sensible.
 
-```{r single-instance-function-plot}
 
+```r
 sif <- agg_by_arrival_function(single_instance_function)
 plot(sif$dwhse_arrival_date, sif$dwhse_arrival_volume, type='l',
      xlab = "Warehouse Arrival Date", ylab = "Warehouse Arrival Volume", main = "Single Instance Function Arrival Volume")
-
 ```
+
+![](north-2021-step-by-step_files/figure-html/single-instance-function-plot-1.png)<!-- -->
 
 Alas, it <em>is</em> sensible :) But, <mark>one instance is sort of useless. The real value comes from doing it over and over to see what typically happens and what could happen (given our assumptions).</mark>
 
@@ -167,7 +349,8 @@ Alas, it <em>is</em> sensible :) But, <mark>one instance is sort of useless. The
 
 Now, the next step is to run the single instance function many times. Mentally, for me, this took some time to grasp. So, if you don't get it at first glance... don't get discouraged. Eventually, it becomes a natural thought processes. <mark>Everything takes practice.</mark>
 
-```{r multi-instance-setup}
+
+```r
 outer_sim <- function(n=10) {
   
   multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
@@ -192,10 +375,73 @@ test_outer_sim_smaller <- test_outer_sim[test_outer_sim$dwhse_arrival_date == as
 test_outer_sim_smaller %>%
   kbl(caption = "Multi Instance Function Test Output") %>%
   kable_classic(full_width = F, html_font = "Cambria", position = "left")
-
 ```
 
-```{r multi-instance-plot}
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; ">
+<caption>Multi Instance Function Test Output</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> dwhse_arrival_date </th>
+   <th style="text-align:right;"> dwhse_arrival_volume </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 11 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 107 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 200 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 292 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 1000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 394 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 484 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 587 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 684 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 777 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 5000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 873 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table>
+
+
+```r
 ggplot(test_outer_sim,
        aes(x = as.Date(dwhse_arrival_date), y = dwhse_arrival_volume, group = dwhse_arrival_date)) +
   geom_boxplot() +
@@ -203,11 +449,14 @@ ggplot(test_outer_sim,
   labs(x = "Warehouse Arrival Date", y = "Warehouse Arrival Volume", main = "Multi Instance Arrival Volume Boxplot")
 ```
 
+![](north-2021-step-by-step_files/figure-html/multi-instance-plot-1.png)<!-- -->
+
 So, how do we get to a place where I can change different parts of the model to ask what-of questions? <mark>How do we get to scenario planning?</mark> In order to do that effectively, <mark>we want to add a bunch of parameters to the function.</mark>  
 
 ## Multiple Instances with Adjustable Parameters
 
-```{r multi-instance-with-parameters}
+
+```r
 sim_function <- function(num_sims = 10, num_ports = 1,
                          start_date = as.Date("2020-12-01"),
                          end_date   = as.Date("2021-03-01"),
@@ -252,13 +501,64 @@ test_me <- sim_function() %>% arrange(dwhse_arrival_date) %>% head(10)
 test_me %>%
   kbl(caption = "Multi Instance Parameters Test Output") %>%
   kable_classic(full_width = F, html_font = "Cambria", position = "left")
-
 ```
+
+<table class=" lightable-classic" style="font-family: Cambria; width: auto !important; ">
+<caption>Multi Instance Parameters Test Output</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> dwhse_arrival_date </th>
+   <th style="text-align:right;"> dwhse_arrival_volume </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2020-12-29 </td>
+   <td style="text-align:right;"> 998 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:right;"> 999 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:right;"> 1000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 1000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 999 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-01-01 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table>
 
 Boxplots are one way to look at this output. We can also use line charts to view the average (mean) or the 80th percentile.
 
-```{r multi-instance-with-parameters-line-chart}
 
+```r
 test_plot <- sim_function() %>%
   mutate(dwhse_arrival_date = as.character(dwhse_arrival_date)) %>%
   group_by(dwhse_arrival_date) %>%
@@ -266,13 +566,21 @@ test_plot <- sim_function() %>%
             eighty_arrival_volume = quantile(dwhse_arrival_volume, 0.8))
 
 test_plot_long <- gather(test_plot, condition, measurement, mean_arrival_volume:eighty_arrival_volume, factor_key=TRUE)
+```
 
+```
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+```
+
+```r
 ggplot(test_plot_long, aes(x=as.Date(dwhse_arrival_date), y=measurement, group=condition, color=condition)) + 
   geom_line() +
   theme_minimal() +
   labs(x = "Warehouse Arrival Date", y = "Warehouse Arrival Volume", main = "Multi Instance Arrival Volume Line Chart")
-
 ```
+
+![](north-2021-step-by-step_files/figure-html/multi-instance-with-parameters-line-chart-1.png)<!-- -->
 
 If you want to cover 80% of scenarios, plan for the arrival of 2000 units daily. 
 
@@ -280,8 +588,8 @@ If you want to cover 80% of scenarios, plan for the arrival of 2000 units daily.
 
 <mark>Ports will slow down and recover. But they won't recover instantaneously.</mark> There is a mechanical max - which means they can only process so much backlog on a given day. It's essential to build that into the model.  
 
-```{r add-complexity}
 
+```r
 delay_range <- seq.Date(from=as.Date("2021-01-01"),
                         to=as.Date("2021-01-15"), by="day")
 
@@ -363,10 +671,12 @@ ggplot(test_sim,
   labs(x = "Warehouse Arrival Date", y = "Warehouse Arrival Volume", title = "Multi Instance Arrival Volume Boxplot")
 ```
 
+![](north-2021-step-by-step_files/figure-html/add-complexity-1.png)<!-- -->
+
 ## Create Scenarios
 
-```{r create-scenarios}
 
+```r
 delay_range <- seq.Date(from=as.Date("2021-02-01"),
                         to=as.Date("2021-02-15"), by="day")
 
@@ -396,8 +706,9 @@ ggplot(sim_plan_comp, aes(x=dwhse_arrival_date, y=dwhse_arrival_volume, group=si
   geom_line() +
   theme_minimal() +
   labs(x = "Warehouse Arrival Date", y = "Warehouse Arrival Volume", title = "Multi Instance Arrival Volume Boxplot")
-
 ```
+
+![](north-2021-step-by-step_files/figure-html/create-scenarios-1.png)<!-- -->
 
 ## The Most Important Things to Remember
 
