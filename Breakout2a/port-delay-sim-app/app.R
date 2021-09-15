@@ -115,7 +115,8 @@ ui <- fluidPage(
                   choices = list("1" = 1, "10" = 10, "20" = 20), 
                   selected = 10),
       
-      p("Base Case"),
+      h3("Base Case"),
+      hr(),
 
       numericInput("origin_volume_base", 
                    p("Daily Ship Volume"), 
@@ -138,6 +139,7 @@ ui <- fluidPage(
                    value = 100000), 
     
       h3("Alternative Scenario"),
+      hr(),
 
       numericInput("origin_volume_comp", 
                    p("Daily Ship Volume"), 
@@ -168,10 +170,8 @@ ui <- fluidPage(
       
       # Output: Tabset w/ plot, summary, and table ----
       tabsetPanel(type = "tabs",
-                  tabPanel("Single Instance",
-                           # verbatimTextOutput('prob_base_1250', placeholder = TRUE),
-                           plotOutput("single_sim_box")),
-                  tabPanel("Scenario Comparison", plotOutput("scenario_plan_line")))
+                  tabPanel("Single Instance", plotOutput("single_sim_box", height = "1000px")),
+                  tabPanel("Scenario Comparison", plotOutput("scenario_plan_line", height = "1000px")))
     )
   )
 )
