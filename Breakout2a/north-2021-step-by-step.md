@@ -21,7 +21,7 @@ rnorm(1, 14, 2) # single value, normal
 ```
 
 ```
-## [1] 13.29127
+## [1] 13.7729
 ```
 
 Now, lets sample ten thousand observations and plot it to ensure it does, indeed, give us a normal distribution of values around the mean value of 14.
@@ -98,56 +98,56 @@ head(single_instance_manual) %>%
   <tr>
    <td style="text-align:left;"> 2020-12-01 </td>
    <td style="text-align:right;"> 999 </td>
-   <td style="text-align:right;"> 12.68027 </td>
-   <td style="text-align:right;"> 12.82438 </td>
-   <td style="text-align:right;"> 3.535596 </td>
-   <td style="text-align:right;"> 29 </td>
-   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:right;"> 12.93129 </td>
+   <td style="text-align:right;"> 12.48469 </td>
+   <td style="text-align:right;"> 4.181519 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:left;"> 2020-12-31 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-02 </td>
-   <td style="text-align:right;"> 1002 </td>
-   <td style="text-align:right;"> 11.40327 </td>
-   <td style="text-align:right;"> 21.60117 </td>
-   <td style="text-align:right;"> 5.162405 </td>
-   <td style="text-align:right;"> 38 </td>
-   <td style="text-align:left;"> 2021-01-09 </td>
+   <td style="text-align:right;"> 999 </td>
+   <td style="text-align:right;"> 16.13048 </td>
+   <td style="text-align:right;"> 11.62192 </td>
+   <td style="text-align:right;"> 4.449094 </td>
+   <td style="text-align:right;"> 32 </td>
+   <td style="text-align:left;"> 2021-01-03 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-03 </td>
-   <td style="text-align:right;"> 1000 </td>
-   <td style="text-align:right;"> 13.33251 </td>
-   <td style="text-align:right;"> 13.57889 </td>
-   <td style="text-align:right;"> 2.046263 </td>
-   <td style="text-align:right;"> 29 </td>
-   <td style="text-align:left;"> 2021-01-01 </td>
+   <td style="text-align:right;"> 999 </td>
+   <td style="text-align:right;"> 11.81781 </td>
+   <td style="text-align:right;"> 13.55039 </td>
+   <td style="text-align:right;"> 5.606248 </td>
+   <td style="text-align:right;"> 31 </td>
+   <td style="text-align:left;"> 2021-01-03 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-04 </td>
-   <td style="text-align:right;"> 1001 </td>
-   <td style="text-align:right;"> 14.65524 </td>
-   <td style="text-align:right;"> 13.41956 </td>
-   <td style="text-align:right;"> 3.676399 </td>
-   <td style="text-align:right;"> 32 </td>
-   <td style="text-align:left;"> 2021-01-05 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 12.56789 </td>
+   <td style="text-align:right;"> 13.93919 </td>
+   <td style="text-align:right;"> 3.554529 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:left;"> 2021-01-03 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-05 </td>
-   <td style="text-align:right;"> 998 </td>
-   <td style="text-align:right;"> 12.04889 </td>
-   <td style="text-align:right;"> 18.25772 </td>
-   <td style="text-align:right;"> 2.725905 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 13.83739 </td>
+   <td style="text-align:right;"> 14.63387 </td>
+   <td style="text-align:right;"> 4.316763 </td>
    <td style="text-align:right;"> 33 </td>
    <td style="text-align:left;"> 2021-01-07 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-06 </td>
-   <td style="text-align:right;"> 1001 </td>
-   <td style="text-align:right;"> 11.88893 </td>
-   <td style="text-align:right;"> 11.79702 </td>
-   <td style="text-align:right;"> 5.151790 </td>
-   <td style="text-align:right;"> 29 </td>
-   <td style="text-align:left;"> 2021-01-04 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 16.88286 </td>
+   <td style="text-align:right;"> 19.91407 </td>
+   <td style="text-align:right;"> 6.093552 </td>
+   <td style="text-align:right;"> 43 </td>
+   <td style="text-align:left;"> 2021-01-18 </td>
   </tr>
 </tbody>
 </table>
@@ -200,16 +200,12 @@ head(agg_by_arrival_function(single_instance_manual), 6) %>%
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:left;"> 2020-12-31 </td>
    <td style="text-align:right;"> 999 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 2020-12-31 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> 2021-01-01 </td>
-   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2021-01-02 </td>
@@ -217,11 +213,15 @@ head(agg_by_arrival_function(single_instance_manual), 6) %>%
   </tr>
   <tr>
    <td style="text-align:left;"> 2021-01-03 </td>
-   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 2998 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2021-01-04 </td>
-   <td style="text-align:right;"> 1001 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2021-01-05 </td>
+   <td style="text-align:right;"> 1000 </td>
   </tr>
 </tbody>
 </table>
@@ -277,57 +277,57 @@ head(single_instance_function) %>%
 <tbody>
   <tr>
    <td style="text-align:left;"> 2020-12-01 </td>
-   <td style="text-align:right;"> 1001 </td>
-   <td style="text-align:right;"> 14.82279 </td>
-   <td style="text-align:right;"> 15.54591 </td>
-   <td style="text-align:right;"> 3.803584 </td>
-   <td style="text-align:right;"> 34 </td>
-   <td style="text-align:left;"> 2021-01-04 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 11.72705 </td>
+   <td style="text-align:right;"> 12.60592 </td>
+   <td style="text-align:right;"> 3.890264 </td>
+   <td style="text-align:right;"> 28 </td>
+   <td style="text-align:left;"> 2020-12-29 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-02 </td>
-   <td style="text-align:right;"> 1000 </td>
-   <td style="text-align:right;"> 18.90902 </td>
-   <td style="text-align:right;"> 13.53086 </td>
-   <td style="text-align:right;"> 3.201615 </td>
-   <td style="text-align:right;"> 36 </td>
-   <td style="text-align:left;"> 2021-01-07 </td>
+   <td style="text-align:right;"> 1001 </td>
+   <td style="text-align:right;"> 10.90033 </td>
+   <td style="text-align:right;"> 15.63553 </td>
+   <td style="text-align:right;"> 4.359615 </td>
+   <td style="text-align:right;"> 31 </td>
+   <td style="text-align:left;"> 2021-01-02 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-03 </td>
-   <td style="text-align:right;"> 999 </td>
-   <td style="text-align:right;"> 11.81023 </td>
-   <td style="text-align:right;"> 11.77812 </td>
-   <td style="text-align:right;"> 4.088256 </td>
-   <td style="text-align:right;"> 28 </td>
-   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 19.84995 </td>
+   <td style="text-align:right;"> 11.15528 </td>
+   <td style="text-align:right;"> 3.842503 </td>
+   <td style="text-align:right;"> 35 </td>
+   <td style="text-align:left;"> 2021-01-07 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-04 </td>
-   <td style="text-align:right;"> 998 </td>
-   <td style="text-align:right;"> 12.88880 </td>
-   <td style="text-align:right;"> 14.03698 </td>
-   <td style="text-align:right;"> 3.047648 </td>
-   <td style="text-align:right;"> 30 </td>
-   <td style="text-align:left;"> 2021-01-03 </td>
+   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:right;"> 13.52946 </td>
+   <td style="text-align:right;"> 14.96582 </td>
+   <td style="text-align:right;"> 4.831406 </td>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:left;"> 2021-01-06 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-05 </td>
    <td style="text-align:right;"> 1001 </td>
-   <td style="text-align:right;"> 13.35430 </td>
-   <td style="text-align:right;"> 13.80223 </td>
-   <td style="text-align:right;"> 3.238579 </td>
-   <td style="text-align:right;"> 30 </td>
-   <td style="text-align:left;"> 2021-01-04 </td>
+   <td style="text-align:right;"> 14.88071 </td>
+   <td style="text-align:right;"> 12.69504 </td>
+   <td style="text-align:right;"> 5.162739 </td>
+   <td style="text-align:right;"> 33 </td>
+   <td style="text-align:left;"> 2021-01-07 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-06 </td>
    <td style="text-align:right;"> 1000 </td>
-   <td style="text-align:right;"> 15.71353 </td>
-   <td style="text-align:right;"> 17.63602 </td>
-   <td style="text-align:right;"> 2.895235 </td>
-   <td style="text-align:right;"> 36 </td>
-   <td style="text-align:left;"> 2021-01-11 </td>
+   <td style="text-align:right;"> 12.24024 </td>
+   <td style="text-align:right;"> 11.99529 </td>
+   <td style="text-align:right;"> 4.419835 </td>
+   <td style="text-align:right;"> 29 </td>
+   <td style="text-align:left;"> 2021-01-04 </td>
   </tr>
 </tbody>
 </table>
@@ -347,14 +347,16 @@ Alas, it <em>is</em> sensible :) But, <mark>one instance is sort of useless. The
 
 ## Multiple Instances
 
-Now, the next step is to run the single instance function many times. Mentally, for me, this took some time to grasp. So, if you don't get it at first glance... don't get discouraged. Eventually, it becomes a natural thought processes. <mark>Everything takes practice.</mark>
+Now, the next step is to run the single instance function many times. <mark>Mentally, for me, this took some time to grasp. So, if you don't get it at first glance... don't get discouraged. Eventually, it becomes a natural thought processes. Everything takes practice.</mark> Before more code, recall the framework:
+
+![alt text here](mc-framework.png)
 
 
 ```r
 outer_sim <- function(n=10) {
   
-  multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
-                                        dwhse_arrival_volume = double())  
+  master_data_frame <- data.frame(dwhse_arrival_date = as.Date(character()),
+                                  dwhse_arrival_volume = double())  
   
   for (i in 1:n) {
     
@@ -362,11 +364,11 @@ outer_sim <- function(n=10) {
     
     single_aggregate <- agg_by_arrival_function(hold)
     
-    multi_instance_function <- rbind(multi_instance_function, single_aggregate)
+    master_data_frame <- rbind(master_data_frame, single_aggregate)
     
   }
   
-  return(multi_instance_function)
+  return(master_data_frame)
   
 }
 
@@ -388,54 +390,54 @@ test_outer_sim_smaller %>%
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 11 </td>
+   <td style="text-align:left;"> 10 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
-   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1001 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 107 </td>
-   <td style="text-align:left;"> 2021-01-10 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 200 </td>
-   <td style="text-align:left;"> 2021-01-10 </td>
-   <td style="text-align:right;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 292 </td>
+   <td style="text-align:left;"> 105 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
    <td style="text-align:right;"> 1000 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 394 </td>
+   <td style="text-align:left;"> 204 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 484 </td>
+   <td style="text-align:left;"> 299 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 587 </td>
+   <td style="text-align:left;"> 397 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 1001 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 488 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 684 </td>
+   <td style="text-align:left;"> 581 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 777 </td>
+   <td style="text-align:left;"> 674 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
-   <td style="text-align:right;"> 5000 </td>
+   <td style="text-align:right;"> 2000 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 873 </td>
+   <td style="text-align:left;"> 767 </td>
    <td style="text-align:left;"> 2021-01-10 </td>
    <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 863 </td>
+   <td style="text-align:left;"> 2021-01-10 </td>
+   <td style="text-align:right;"> 2000 </td>
   </tr>
 </tbody>
 </table>
@@ -466,8 +468,8 @@ sim_function <- function(num_sims = 10, num_ports = 1,
                          dw_mean  = 4,    dw_var = 1,  dw_xi = 2.5) {
   
   # outer sim (multi instance)
-  multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
-                                        dwhse_arrival_volume = double())  
+  master_data_frame <- data.frame(dwhse_arrival_date = as.Date(character()),
+                                  dwhse_arrival_volume = double())  
   
   for (i in 1:num_sims) {
     
@@ -489,11 +491,11 @@ sim_function <- function(num_sims = 10, num_ports = 1,
     
     single_aggregate <- agg_by_arrival_function(single_instance_function)
     
-    multi_instance_function <- rbind(multi_instance_function, single_aggregate)
+    master_data_frame <- rbind(master_data_frame, single_aggregate)
     
   }
  
-  return(multi_instance_function)
+  return(master_data_frame)
   
 }
 
@@ -513,43 +515,43 @@ test_me %>%
  </thead>
 <tbody>
   <tr>
+   <td style="text-align:left;"> 2020-12-27 </td>
+   <td style="text-align:right;"> 999 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-28 </td>
+   <td style="text-align:right;"> 999 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12-28 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> 2020-12-29 </td>
-   <td style="text-align:right;"> 998 </td>
+   <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 2020-12-30 </td>
-   <td style="text-align:right;"> 999 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2020-12-30 </td>
-   <td style="text-align:right;"> 1000 </td>
+   <td style="text-align:left;"> 2020-12-29 </td>
+   <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-30 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 2020-12-31 </td>
-   <td style="text-align:right;"> 1000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2020-12-31 </td>
+   <td style="text-align:left;"> 2020-12-30 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 2020-12-31 </td>
-   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:left;"> 2020-12-30 </td>
+   <td style="text-align:right;"> 1001 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-31 </td>
-   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1001 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2020-12-31 </td>
-   <td style="text-align:right;"> 999 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2021-01-01 </td>
    <td style="text-align:right;"> 0 </td>
   </tr>
 </tbody>
@@ -604,8 +606,8 @@ sim_function <- function(num_sims = 10, num_ports = 10,
                          port_threshold = 2500) {
   
   # outer sim (multi instance)
-  multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
-                                        dwhse_volume = double()) 
+  master_data_frame <- data.frame(dwhse_arrival_date = as.Date(character()),
+                                  dwhse_volume = double()) 
   
   for (i in 1:num_sims) {
     
@@ -616,11 +618,18 @@ sim_function <- function(num_sims = 10, num_ports = 10,
     order_volume <- round(rnorm(length(date_range), order_vol_mean, order_vol_var), 0)
     order_oport <- round(rsnorm(length(date_range), mean = oo_mean, sd = oo_var, xi = oo_xi), 0)
     oport_dport <- round(rsnorm(length(date_range), mean = od_mean, sd = od_var, xi = od_xi), 0)
+    
+    ############################################################
+    # new stuff to account for port backlog and mechanical max #
+    ############################################################
+    
     trans_port <- order_oport + oport_dport
     
+    # data as in when it gets to the port
     port_data <- data.frame(date_range, order_volume, trans_port)
     port_data$port_arrival_date <- port_data$date_range + port_data$trans_port
     
+    # if arrival to port date is within delay range, add delay magnitude
     port_data$port_arrival_date <- as.Date(port_data$port_arrival_date, format="%Y-%m-%d")
     port_data$port_arrival_date <- if_else(as.character(port_data$port_arrival_date) %in% as.character(delay_range),
                                            port_data$port_arrival_date + delay_mag,
@@ -644,18 +653,24 @@ sim_function <- function(num_sims = 10, num_ports = 10,
       }
     } 
     
+    # add on the domestic transit component
     port_agg$dport_dwhse <- round(rsnorm(length(port_agg$port_arrival_date), mean = dw_mean, sd = dw_var, xi = dw_xi))
     port_agg$dwhse_arrival_date <- as.Date(port_agg$port_arrival_date) + port_agg$dport_dwhse
     
     # before aggregate, need to make names jive
     names(port_agg) <- c("port_arrival_date", "port_arrival_volume", "order_volume", "dport_dwhse", "dwhse_arrival_date")
+    
+    ###############################
+    # end port backlog adjustment #
+    ###############################
+    
     single_instance_agg <- agg_by_arrival_function(port_agg)
     
-    multi_instance_function <- rbind(multi_instance_function, single_instance_agg)
+    master_data_frame <- rbind(master_data_frame, single_instance_agg)
     
   }
   
-  return(multi_instance_function)
+  return(master_data_frame)
   
 }
 

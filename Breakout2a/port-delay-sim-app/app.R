@@ -12,7 +12,6 @@ library(shiny) # for shiny
 library(bslib) # for shiny theme
 library(ggplot2) # for visualization
 library(tidyverse) # for manipulating data
-# library(reshape2)
 library(DT) # for tables
 library(fGarch) # for creating skewed distributions
 
@@ -92,7 +91,7 @@ sim_function <- function(num_sims = 10, num_ports = 1,
 }
 
 delay_range <- seq.Date(from=as.Date("2021-02-01"),
-                        to=as.Date("2021-02-14"), by="day")
+                        to=as.Date("2021-02-15"), by="day")
 
 # Define UI ----
 ui <- fluidPage(
@@ -115,11 +114,11 @@ ui <- fluidPage(
                   choices = list("1" = 1, "10" = 10, "20" = 20), 
                   selected = 10),
       
-      h3("Base Case"),
+      h2("Base Case"),
       hr(),
 
       numericInput("origin_volume_base", 
-                   p("Daily Ship Volume"), 
+                   p("Daily Order Volume"), 
                    value = 100), 
       
       numericInput("volume_var_base", 
@@ -138,11 +137,11 @@ ui <- fluidPage(
                    p("Port Throughput Max"), 
                    value = 100000), 
     
-      h3("Alternative Scenario"),
+      h2("Alternative Scenario"),
       hr(),
 
       numericInput("origin_volume_comp", 
-                   p("Daily Ship Volume"), 
+                   p("Daily Order Volume"), 
                    value = 100), 
       
       numericInput("volume_var_comp", 
@@ -237,7 +236,16 @@ server <- function(input, output) {
     ggplot(d, aes(x=as.Date(dwhse_arrival_date), y=dwhse_volume, group=dwhse_arrival_date)) +
       geom_boxplot() +
       theme_minimal() +
-      labs(x="Warehouse Arrival Date", y="Unit Arrival Volume")
+      geom_hline(yintercept = 1000, color = "red") +
+      annotate("rect", xmin = as.Date("2021-02-01"), xmax = as.Date("2021-02-15"),
+                       ymin = 0, ymax = 2500,
+               alpha = .05) +
+      scale_y_continuous(limits = c(0, 2500), breaks = seq(0, 2500, 100)) +
+      scale_x_date(date_breaks = "1 week") +
+      labs(x="Warehouse Arrival Date", y="Unit Arrival Volume") +
+      theme(axis.text=element_text(size=25),
+            axis.title=element_text(size=30,face="bold"),
+            axis.text.x = element_text(angle = 45, hjust = 1))
     
   })
   
@@ -246,11 +254,24 @@ server <- function(input, output) {
     req(sim_plan_comp())
     d <- sim_plan_comp()
     
+    print(head(d[d$dwhse_arrival_date > as.Date("2021-02-15"),],20))
+    
     ggplot(d, aes(x=dwhse_arrival_date, y=arrival_volume, group=sim, color=sim)) +
       geom_line() +
-      scale_color_manual(values=c("dodgerblue", "deeppink")) +
       theme_minimal() +
-      labs(x="Warehouse Arrival Date", y="Unit Arrival Volume")
+      scale_color_manual(values=c("dodgerblue", "deeppink")) +
+      scale_y_continuous(limits = c(0, 2500), breaks = seq(0, 2500, 100)) +
+      scale_x_date(date_breaks = "1 week") +
+      labs(x="Warehouse Arrival Date", y="Unit Arrival Volume", color ="Scenario") +
+      theme(axis.text=element_text(size=25),
+            axis.title=element_text(size=30,face="bold"),
+            legend.title = element_text(size=25),
+            legend.text = element_text(size=25),
+            axis.text.x = element_text(angle = 45, hjust = 1)) +
+      geom_hline(yintercept = 1000, color = "red") +
+      annotate("rect", xmin = as.Date("2021-02-01"), xmax = as.Date("2021-02-15"),
+               ymin = 0, ymax = 2500,
+               alpha = .05)
     
   })
   

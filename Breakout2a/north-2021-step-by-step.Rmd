@@ -92,7 +92,7 @@ plot(sim$dwhse_arrival_date, sim$dwhse_arrival_volume, type='l',
 
 ```
 
-If you are responsible for warehouse planning, would you plan to receive 1,000 units per day? 2,000 units? Let's says you plan on 1,800. The next question is: <mark>how sure are you of these projections? The answer is not sure! This is only a single instance. We want to do this many more times to answer that second question.</mark>  
+If you are responsible for warehouse planning, would you plan to receive 1,000 units per day? 2,000 units? Let's says you plan on 1,800. The next question is: <mark>how sure are you of these projections? The answer is not sure! This is only a single instance. We want to do this many more times to answer that second question. But before we do we want to create some functions so things stay organized.</mark>  
 
 Before moving forward... the pipeline used to create the aggregate dataframe for that plot above - I'm going to use that a lot so it is useful to wrap it into a function itself. It will make the code more readable as we proceed. 
 
@@ -165,13 +165,15 @@ Alas, it <em>is</em> sensible :) But, <mark>one instance is sort of useless. The
 
 ## Multiple Instances
 
-Now, the next step is to run the single instance function many times. Mentally, for me, this took some time to grasp. So, if you don't get it at first glance... don't get discouraged. Eventually, it becomes a natural thought processes. <mark>Everything takes practice.</mark>
+Now, the next step is to run the single instance function many times. <mark>Mentally, for me, this took some time to grasp. So, if you don't get it at first glance... don't get discouraged. Eventually, it becomes a natural thought processes. Everything takes practice.</mark> Before more code, recall the framework:
+
+![](mc-framework.png)
 
 ```{r multi-instance-setup}
 outer_sim <- function(n=10) {
   
-  multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
-                                        dwhse_arrival_volume = double())  
+  master_data_frame <- data.frame(dwhse_arrival_date = as.Date(character()),
+                                  dwhse_arrival_volume = double())  
   
   for (i in 1:n) {
     
@@ -179,11 +181,11 @@ outer_sim <- function(n=10) {
     
     single_aggregate <- agg_by_arrival_function(hold)
     
-    multi_instance_function <- rbind(multi_instance_function, single_aggregate)
+    master_data_frame <- rbind(master_data_frame, single_aggregate)
     
   }
   
-  return(multi_instance_function)
+  return(master_data_frame)
   
 }
 
@@ -217,8 +219,8 @@ sim_function <- function(num_sims = 10, num_ports = 1,
                          dw_mean  = 4,    dw_var = 1,  dw_xi = 2.5) {
   
   # outer sim (multi instance)
-  multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
-                                        dwhse_arrival_volume = double())  
+  master_data_frame <- data.frame(dwhse_arrival_date = as.Date(character()),
+                                  dwhse_arrival_volume = double())  
   
   for (i in 1:num_sims) {
     
@@ -240,11 +242,11 @@ sim_function <- function(num_sims = 10, num_ports = 1,
     
     single_aggregate <- agg_by_arrival_function(single_instance_function)
     
-    multi_instance_function <- rbind(multi_instance_function, single_aggregate)
+    master_data_frame <- rbind(master_data_frame, single_aggregate)
     
   }
  
-  return(multi_instance_function)
+  return(master_data_frame)
   
 }
 
@@ -296,8 +298,8 @@ sim_function <- function(num_sims = 10, num_ports = 10,
                          port_threshold = 2500) {
   
   # outer sim (multi instance)
-  multi_instance_function <- data.frame(dwhse_arrival_date = as.Date(character()),
-                                        dwhse_volume = double()) 
+  master_data_frame <- data.frame(dwhse_arrival_date = as.Date(character()),
+                                  dwhse_volume = double()) 
   
   for (i in 1:num_sims) {
     
@@ -308,11 +310,18 @@ sim_function <- function(num_sims = 10, num_ports = 10,
     order_volume <- round(rnorm(length(date_range), order_vol_mean, order_vol_var), 0)
     order_oport <- round(rsnorm(length(date_range), mean = oo_mean, sd = oo_var, xi = oo_xi), 0)
     oport_dport <- round(rsnorm(length(date_range), mean = od_mean, sd = od_var, xi = od_xi), 0)
+    
+    ############################################################
+    # new stuff to account for port backlog and mechanical max #
+    ############################################################
+    
     trans_port <- order_oport + oport_dport
     
+    # data as in when it gets to the port
     port_data <- data.frame(date_range, order_volume, trans_port)
     port_data$port_arrival_date <- port_data$date_range + port_data$trans_port
     
+    # if arrival to port date is within delay range, add delay magnitude
     port_data$port_arrival_date <- as.Date(port_data$port_arrival_date, format="%Y-%m-%d")
     port_data$port_arrival_date <- if_else(as.character(port_data$port_arrival_date) %in% as.character(delay_range),
                                            port_data$port_arrival_date + delay_mag,
@@ -336,24 +345,34 @@ sim_function <- function(num_sims = 10, num_ports = 10,
       }
     } 
     
+    # add on the domestic transit component
     port_agg$dport_dwhse <- round(rsnorm(length(port_agg$port_arrival_date), mean = dw_mean, sd = dw_var, xi = dw_xi))
     port_agg$dwhse_arrival_date <- as.Date(port_agg$port_arrival_date) + port_agg$dport_dwhse
     
     # before aggregate, need to make names jive
     names(port_agg) <- c("port_arrival_date", "port_arrival_volume", "order_volume", "dport_dwhse", "dwhse_arrival_date")
+    
+    ###############################
+    # end port backlog adjustment #
+    ###############################
+    
     single_instance_agg <- agg_by_arrival_function(port_agg)
     
-    multi_instance_function <- rbind(multi_instance_function, single_instance_agg)
+    master_data_frame <- rbind(master_data_frame, single_instance_agg)
     
   }
   
-  return(multi_instance_function)
+  return(master_data_frame)
   
 }
 
-test_sim <- sim_function(num_sims  = 100, order_vol_var  = 10,
-                         oo_var    =   1, od_var    =   0, dw_var    =   0,
-                         delay_range    = delay_range, delay_mag =   0,
+test_sim <- sim_function(num_sims       = 100,
+                         order_vol_var  = 10,
+                         oo_var         = 1,
+                         od_var         = 0,
+                         dw_var         = 0,
+                         delay_range    = delay_range,
+                         delay_mag      = 0,
                          port_threshold = 100000)
 
 ggplot(test_sim,
